@@ -1,10 +1,10 @@
-#include <iostream>
+#include "Functions.h"
+using namespace std;
 
 int main()
 {
-	std::cout << "Hello world" << std::endl;
-	std::cout << "Branch 1 mod 1" << std::endl;
-	std::cout << "Branch 1 mod 2" << std::endl;
+	registration();
+		
 	system("pause");
 	return 0;
 }
