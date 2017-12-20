@@ -1,10 +1,8 @@
 #include "Functions.h"
-using namespace std;
+using namespace std; /*valja li*/
 
 int main()
 {
-	cout << "Hello World";
-
 	registration();
 		
 	system("pause");
