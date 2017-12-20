@@ -32,20 +32,21 @@ void registration()
 
 int checkUser(string username, string password)
 {
-	string line1, line2;
+	std::string line1;
+	std::string line2;
 	line1 = username + " " + password;
-	ifstream myfile ("codes.txt");
+	cout << line1;
+	std::ifstream myfile ("codes.txt");
 	if (myfile.is_open())
 	{
-		while (getline(myfile, line2))
+		while (std::getline(myfile, line2))
 		{
-			if (line1.compare(line2) == 0)
+			if (line2.compare(line1) == 0)
 				return 1;
 		}
 		myfile.close();
-		return 1;
 	}
-	else cout << "Error.";
+	return 0;
 }
 
 int checkUser(string username)
@@ -65,7 +66,6 @@ int checkUser(string username)
 			}
 		}
 		myfile.close();
-		return 1;
 	}
-	else cout << "Error.";
+	return 1;
 }
