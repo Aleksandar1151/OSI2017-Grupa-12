@@ -1,4 +1,7 @@
 #include "Functions.h"
+#include <fstream>
+#include <iostream>
+#include <string>
 using namespace std;
 
 void registration()
@@ -25,4 +28,44 @@ void registration()
 	else cout << "Greska";*/
 
 	cout << name << lastname << password << group;
+}
+
+int checkUser(string username, string password)
+{
+	std::string line1;
+	std::string line2;
+	line1 = username + " " + password;
+	cout << line1;
+	std::ifstream myfile ("codes.txt");
+	if (myfile.is_open())
+	{
+		while (std::getline(myfile, line2))
+		{
+			if (line2.compare(line1) == 0)
+				return 1;
+		}
+		myfile.close();
+	}
+	return 0;
+}
+
+int checkUser(string username)
+{
+	int n;
+	n = username.length();
+	string line;
+	ifstream myfile("codes.txt");
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			if (username.compare(0, n, line))
+			{
+				return 0;
+				myfile.close();
+			}
+		}
+		myfile.close();
+	}
+	return 1;
 }
