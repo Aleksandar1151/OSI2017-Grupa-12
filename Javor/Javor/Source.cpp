@@ -12,10 +12,10 @@ int main()
 	cout << "Password: ";
 	cin >> password;
 	p = checkUser(username, password);
-	cout << p;
-	registration();
-	
+	cout << "\n\n Pripada grupi: " << p << "\n\n";
+
+	//registration();
+
 	system("pause");
 	return 0;
 }
-/*Dule*/

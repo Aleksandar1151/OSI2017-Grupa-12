@@ -2,18 +2,19 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <iomanip>
 using namespace std;
 
 void registration()
 {
-	string name, lastname, password;
+	string username, password;
 	int group;
 	cout << "Registracija:\n";
-	cout << "Ime:\n>";
-	cin >> name;
+	/*cout << "Username:\n>";
+	cin >> username; 
 	cout << "Prezime:\n>";
 	cin >> lastname;
-	cout << "Password:\n>";
+	cout << "Password:\n>";*/
 	cin >> password;
 	cout << "Korisnicka grupa:\n";
 	cout << "Administrator	[1]\n";
@@ -27,45 +28,73 @@ void registration()
 	createAnlys();
 	else cout << "Greska";*/
 
-	cout << name << lastname << password << group;
+	//cout << name << lastname << password << group;
 }
+
+void login()
+{}
 
 int checkUser(string username, string password)
 {
-	std::string line1;
-	std::string line2;
+	string line1;
+	string line2;
+	int n ,group,q;
+
 	line1 = username + " " + password;
-	cout << line1;
-	std::ifstream myfile ("codes.txt");
+	n = (int)line1.size();
+	cout << "Unio si:" << line1;
+
+	ifstream myfile;
+	myfile.open("codes.txt");
+
 	if (myfile.is_open())
 	{
-		while (std::getline(myfile, line2))
+		while (getline(myfile, line2))
 		{
-			if (line2.compare(line1) == 0)
-				return 1;
+			q = (int)line2.length(); q = q - 1;
+			group = line2[q] - 48;
+			line2.resize(n);
+				if (line1.compare(line2) == 0)
+				{
+					myfile.close();
+					return group;					
+				}
+		}
+		myfile.close();
+	}
+
+	return 0;
+}
+
+int checkUser(string username)
+{
+	string name, password, line;
+	int n = (int)username.size();
+	int q,group;
+	
+	cout << "Duzina je: "<< n << "\n\n";
+	ifstream myfile;
+	myfile.open("codes.txt");
+
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			q = (int)line.length();
+			cout << line << " Njegova duzina je " << q << endl;
+			q = q - 1;
+			group = line[q] - 48;			
+			cout << "Grupa: " << group << endl;
+			line.resize(n);
+			if (username.compare(line) == 0)			
+			{
+				cout << line << " i " << username << "\n";
+				myfile.close();				
+				return group;
+			}			
 		}
 		myfile.close();
 	}
 	return 0;
 }
 
-int checkUser(string username)
-{
-	int n;
-	n = username.length();
-	string line;
-	ifstream myfile("codes.txt");
-	if (myfile.is_open())
-	{
-		while (getline(myfile, line))
-		{
-			if (username.compare(0, n, line))
-			{
-				return 0;
-				myfile.close();
-			}
-		}
-		myfile.close();
-	}
-	return 1;
-}

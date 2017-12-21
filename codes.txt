@@ -1,7 +1,0 @@
-admin admin
-veljanos 2245
-dusan 1111
-drago 5555
-biljana 1234
-milica 9876
-aleksandar 1212

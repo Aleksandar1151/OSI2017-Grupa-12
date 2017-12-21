@@ -1,3 +1,2 @@
 ﻿  Functions.cpp
-c:\users\user\documents\github\osi2017-grupa-12\javor\javor\functions.cpp(55): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-  Javor.vcxproj -> C:\Users\user\Documents\GitHub\OSI2017-Grupa-12\Javor\x64\Debug\Javor.exe
+  Javor.vcxproj -> C:\Users\Admin\Documents\GitHub\OSI2017-Grupa-12\Javor\x64\Debug\Javor.exe
