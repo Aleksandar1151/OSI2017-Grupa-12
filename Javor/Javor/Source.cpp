@@ -1,16 +1,19 @@
 #include "Functions.h"
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 
 int main()
 {
 	
 	login();
-	/* 
 	
+	/* 
+	registration();
 	
 	registration();
+	system("CLS");
 	*/
 	
 	
