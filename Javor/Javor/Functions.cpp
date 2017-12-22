@@ -32,7 +32,31 @@ void registration()
 }
 
 void login()
-{}
+{
+	string username, password;
+	int group;// = 0;
+	do
+	{
+		cout << "[LOGIN]\n";
+		cout << "Username:\n>";
+		cin >> username;
+		cout << "Password:\n>";
+		cin >> password;
+		group = checkUser(username, password);
+		
+		if ( username != "admin" && password.length() != 4) cout << "\nGreska, ulogujte se ponovo!\n";
+	} while(!group);
+	
+	if (group == 1)
+	{
+		cout << "\n--> Ulogovao se Admin.\n";
+	}
+	else if (group == 2)
+	{
+		cout << "\n--> Ulogovao se Analiticar.\n";
+	}
+	else cout << "\n--> Ne postoji korisnik.\n";
+}
 
 int checkUser(string username, string password)
 {
@@ -42,8 +66,7 @@ int checkUser(string username, string password)
 
 	line1 = username + " " + password;
 	n = (int)line1.size();
-	cout << "Unio si:" << line1;
-
+	
 	ifstream myfile;
 	myfile.open("codes.txt");
 
@@ -72,7 +95,7 @@ int checkUser(string username)
 	int n = (int)username.size();
 	int q,group;
 	
-	cout << "Duzina je: "<< n << "\n\n";
+	//cout << "Duzina je: "<< n << "\n\n";
 	ifstream myfile;
 	myfile.open("codes.txt");
 
@@ -81,14 +104,14 @@ int checkUser(string username)
 		while (getline(myfile, line))
 		{
 			q = (int)line.length();
-			cout << line << " Njegova duzina je " << q << endl;
+			//cout << line << " Njegova duzina je " << q << endl;
 			q = q - 1;
 			group = line[q] - 48;			
-			cout << "Grupa: " << group << endl;
+			//cout << "Grupa: " << group << endl;
 			line.resize(n);
 			if (username.compare(line) == 0)			
 			{
-				cout << line << " i " << username << "\n";
+				//cout << line << " i " << username << "\n";
 				myfile.close();				
 				return group;
 			}			
