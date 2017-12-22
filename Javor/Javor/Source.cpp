@@ -5,8 +5,15 @@ using namespace std;
 
 int main()
 {
+	
 	login();
-
+	/* 
+	
+	
+	registration();
+	*/
+	
+	
 
 	/*int p;
 	string username, password;
@@ -17,7 +24,7 @@ int main()
 	p = checkUser(username, password);
 	cout << "\n\n Pripada grupi: " << p << "\n\n";*/
 
-	//registration();
+	
 
 	system("pause");
 	return 0;

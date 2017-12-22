@@ -7,34 +7,38 @@ using namespace std;
 
 void registration()
 {
+	
 	string username, password;
 	int group;
-	cout << "Registracija:\n";
-	/*cout << "Username:\n>";
-	cin >> username; 
-	cout << "Prezime:\n>";
-	cin >> lastname;
-	cout << "Password:\n>";*/
-	cin >> password;
-	cout << "Korisnicka grupa:\n";
-	cout << "Administrator	[1]\n";
-	cout << "Analiticar	[2]\n>";
-	cin >> group;
-	cout << endl << endl;
 
-	/*if (group == 1)
-	createAdmin();
-	else if (group == 2)
-	createAnlys();
-	else cout << "Greska";*/
+	do {
+		cout << "[Registration]\n";
+		cout << "Username:\n>";
+		cin >> username;
+		cout << "Password:\n>"; 
+		cin >> password;
+		cout << "  User Group:\n" << "	Administrator---[ 1 ]" << endl << "	Analyst---------[ 2 ]\n>";
+		cin >> group;
+		if (password.length() != 4) cout << "Password must have 4 characters!\n";
+	} while (password.length() != 4);
+	
+	ofstream myfile;
 
-	//cout << name << lastname << password << group;
+	myfile.open("codes.txt", ios_base::app);
+	if (myfile.is_open())
+	{
+		myfile << endl  << username << " " << password << " " << group;
+		cout << "\nU datoteku je upisano: " << username << " " << password << " " << group << endl;
+		myfile.close();
+	}	
+	
+
 }
 
 void login()
 {
 	string username, password;
-	int group;// = 0;
+	int group,option;// = 0;
 	do
 	{
 		cout << "[LOGIN]\n";
@@ -44,18 +48,25 @@ void login()
 		cin >> password;
 		group = checkUser(username, password);
 		
-		if ( username != "admin" && password.length() != 4) cout << "\nGreska, ulogujte se ponovo!\n";
+		if ( username != "admin" && password.length() != 4) cout << "\nError, no user!\n";
 	} while(!group);
 	
 	if (group == 1)
 	{
-		cout << "\n--> Ulogovao se Admin.\n";
+		cout << "\n--> Login as Admin.\n";
+		cout << "  Admin options:\n" << "	Change currency--------[ 1 ]" << endl << "	Create Account---------[ 2 ]" << endl << "	Delete Account---------[ 3 ] \n>";
+		cin >> option;
+		if (option == 1) changeCurr();
+		else if (option == 2) registration();
+		else if (option == 3) deleteUser();
+		else cout << "Error, choose options form 1 to 3!\n";		
 	}
 	else if (group == 2)
 	{
-		cout << "\n--> Ulogovao se Analiticar.\n";
+		cout << "\n--> Login as Analiticar.\n";
+		exportData();
 	}
-	else cout << "\n--> Ne postoji korisnik.\n";
+	else cout << "\n--> Unidentified Error!\n";
 }
 
 int checkUser(string username, string password)
@@ -121,3 +132,16 @@ int checkUser(string username)
 	return 0;
 }
 
+void changeCurr()
+{
+	cout << "Changing currency...(unfinished function)\n";
+}
+void deleteUser()
+{
+	cout << "Deleting user...(unfinished function)\n";
+}
+
+void exportData()
+{
+	cout << "Export data...(unfinished function)\n";
+}
