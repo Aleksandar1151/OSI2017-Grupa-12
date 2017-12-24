@@ -1,5 +1,0 @@
-admin admin 1
-aleksandar 1234 1
-lutka 2323 2
-dule 2222 2
-baby 1111 2

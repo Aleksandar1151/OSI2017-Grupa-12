@@ -1,0 +1,10 @@
+admin admin 1
+analiticar analiticar 2
+aleksandar 1234 1
+lutka 2323 2
+dule 2222 2
+baby 1111 2
+loft 1122 1
+loft1 1122 1
+loft2 1122 1
+loft3 1122 1
