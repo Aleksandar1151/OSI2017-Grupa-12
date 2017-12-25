@@ -23,7 +23,7 @@ void registration()
 			} while (password.length() != 4 && cout << "PIN mora imati 4 broja!\nUnesi novi ");
 			
 			do {
-				cout << "  Korisnicka grupa:\n" << "	Administrator---[ 1 ]" << endl << "	Analiticar---------[ 2 ]\n>";
+				cout << "  Korisnicka grupa:\n" << "	Administrator---[ 1 ]" << endl << "	Analiticar------[ 2 ]\n>";
 				cin >> group;
 				if (group != 1 && group != 2) cout << "Morate izabrati jednu od grupa - 1 or 2!\n";
 			} while (group != 1 && group != 2);
