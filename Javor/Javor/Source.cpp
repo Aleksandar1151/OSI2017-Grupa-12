@@ -1,10 +1,11 @@
+#include "Functions.h"
+#include <string>
 #include <iostream>
+#include <stdlib.h>
 
 int main()
 {
-	std::cout << "Hello world" << std::endl;
-	std::cout << "Branch 1 mod 1" << std::endl;
-	std::cout << "Branch 1 mod 2" << std::endl;
+	login();
 	system("pause");
 	return 0;
 }
