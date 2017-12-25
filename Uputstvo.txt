@@ -1,0 +1,15 @@
+Postojeæi nalozi:
+
+Korisnièko ime: admin
+PIN: admin
+---->za pristup opcijama administratora
+
+Korisnièko ime: analiticar
+PIN: analiticar
+---->za pristup opcijama analiticara
+
+*To su jedina dva korisnièka naloga koji nemaju PIN od 4 broja. Prilikom kreiranja korisnièkog naloga, moraæete ukucati PIN od 4 broja.
+
+Ne otvarajte fajl sifre.txt. Nekada ukoliko pomjerite kursor kreiranje naloga preskoèi red i prilikom logina program krešuje. To æemo srediti u sledeæoj verziji.
+
+Odreðene funkcije æemo završiti u 3. dijelu, ovdje smo samo napravili prostor za njih. Prilikom pokretanja tih funkcija ispisaæe ...(funkcija nije zavrsena).
