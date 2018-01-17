@@ -1,5 +1,6 @@
 #include "Functions.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -45,8 +46,9 @@ void registration()
 }
 void login()
 {
-	goto label;
-label:;
+	goto label_1;
+
+label_1:;
 	string username, password;
 	int group=0,option;
 	int flag;
@@ -80,7 +82,12 @@ label:;
 			cout << "Opcije administratora:\n" << "	[ Promijenite valutu ]--------[ 1 ]" << endl << "	[ Napravite novi nalog ]------[ 2 ]" << endl << "	[ Obrisite nalog ]------------[ 3 ] " << endl << "	[ Odjava ]--------------------[ 4 ]" << endl <<"	[ Izlaz ]---------------------[ 5 ] \n >";
 			cin >> option;
 			system("CLS");
-			if (option == 1) changeCurr();
+			if (option == 1)
+			{
+				changeCurr();
+				system("pause");
+				system("CLS");
+			}
 			else if (option == 2) registration();
 			else if (option == 3) deleteUser();
 			else if (option == 4) 
@@ -88,7 +95,7 @@ label:;
 				cout << "Odjavljivanje korisnika " << username << "...\n"; 
 				system("pause");
 				system("CLS"); 
-				goto label; 
+				goto label_1;
 			}
 			else if (option == 5) { cout << "Izlaz iz programa... \n"; }
 			else cout << "Greska, izaberite opcije od 1 do 5!\n";
@@ -128,6 +135,7 @@ int checkUser(string username, string password)
 		}
 		myfile.close();
 	}
+	else cout << "Greska prilikom otvaranja sifre.txt\n";
 	return 0;
 }
 int checkUser(string username) 
@@ -158,17 +166,93 @@ int checkUser(string username)
 	}
 	return 0;
 }
+
 void changeCurr()
-{
-	cout << "\nPromijena valute...(funkcija nije zavrsena)\n\n";
+{	
+	string currency;
+	string header;
+	int headerFlag = 1;
+	string line;
+	
+
+	ifstream fin;
+	fin.open("kuf.txt");
+	ofstream temp;
+	temp.open("temp.txt");
+	cout << "Nova valuta\n> ";
+	cin >> currency;
+
+
+	if (fin.is_open())
+	{
+		getline(fin, header);
+		while (getline(fin, line))
+		{
+			if (headerFlag) {	temp << header << endl; headerFlag = 0;	}
+			int column = 10;
+			size_t length = line.length();
+			istringstream iss(line);
+			string subs;
+			while(column--) {iss >> subs;  }
+			size_t lsubs = subs.length();
+			line.replace(length - lsubs, lsubs, currency);
+			temp << line << endl;
+		}
+		temp.close();
+		fin.close();
+		remove("kuf.txt");
+		rename("temp.txt", "kuf.txt");
+	}
+	else cout << "Greska prilikom otvaranja kuf.txt\n";
+	cout << "Valuta je promijenjena u " << currency<<endl<<endl;
+	
 }
 void deleteUser()
 {
-	cout << "\nBrisanje naloga...(funkcija nije zavrsena)\n\n";
+	string deleteline;
+	string line;
+	string array;
+
+
+	ifstream fin;
+	fin.open("sifre.txt");
+	ofstream temp;
+	temp.open("temp.txt");
+	cout << "Ime\n> ";
+	cin >> deleteline;
+
+
+	while (getline(fin, line))
+	{
+		istringstream iss(line);
+		string subs;
+		iss >> subs;
+
+		if (subs != deleteline)
+		{
+			temp << line << endl;
+		}
+	}
+
+	temp.close();
+	fin.close();
+	remove("sifre.txt");
+	rename("temp.txt", "sifre.txt");
 }
 void exportData()
 {
-	cout << "\nIspis racuna...(funkcija nije zavrsena)\n\n";
-}
+	/*
 
-// Branch A
+    string s = "Somewhere down the road";
+    istringstream iss(s);
+
+    do
+    {
+        string subs;
+        iss >> subs;
+        cout << "Substring: " << subs << endl;
+    } while (iss);
+
+	
+	cout << "\nIspis racuna...(funkcija nije zavrsena)\n\n";*/
+}
