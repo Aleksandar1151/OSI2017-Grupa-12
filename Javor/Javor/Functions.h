@@ -12,3 +12,4 @@ int checkUser(string);
 void changeCurr();
 void deleteUser();
 void exportData();
+bool ListDirectoryContents(const char* );

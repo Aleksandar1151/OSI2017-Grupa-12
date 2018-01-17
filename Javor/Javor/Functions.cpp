@@ -5,6 +5,8 @@
 #include <string>
 #include <iomanip>
 #include <stdio.h>
+#include <windows.h>
+#include <filesystem>
 using namespace std;
 
 void registration()
@@ -103,7 +105,7 @@ label_1:;
 	}
 	else if (group == 2)
 	{
-		exportData();
+		ListDirectoryContents("..\\Racuni\\");
 		system("pause");
 		system("CLS");
 		login();
@@ -255,4 +257,58 @@ void exportData()
 
 	
 	cout << "\nIspis racuna...(funkcija nije zavrsena)\n\n";*/
+}
+
+bool ListDirectoryContents(const char *sDir)
+{
+	WIN32_FIND_DATA fdFile;
+	HANDLE hFind = NULL;
+
+	char sPath[2048];
+
+	//Specify a file mask. *.* = We want everything!
+	sprintf_s(sPath, "%s\\*.*", sDir);
+
+	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
+	{
+		printf("Path not found: [%s]\n", sDir);
+		return false;
+	}
+
+	do
+	{
+		//Find first file will always return "."
+		//    and ".." as the first two directories.
+		if (strcmp(fdFile.cFileName, ".") != 0
+			&& strcmp(fdFile.cFileName, "..") != 0)
+		{
+			//Build up our file path using the passed in
+			//  [sDir] and the file/foldername we just found:
+			sprintf_s(sPath, "%s\\%s", sDir, fdFile.cFileName);
+
+			//Is the entity a File or Folder?
+			if (fdFile.dwFileAttributes &FILE_ATTRIBUTE_DIRECTORY)
+			{
+				printf("Directory: %s\n", sPath);
+				ListDirectoryContents(sPath); //Recursion, I love it!
+			}
+			else {
+				//->printf("File: %s\n", sPath);
+				string line;
+				ifstream file;
+				file.open(sPath, ios::in);
+
+				while (getline(file, line))
+				{
+					cout << line << '\n';
+				}
+				file.close();
+
+			}
+		}
+	} while (FindNextFile(hFind, &fdFile)); //Find the next file.
+
+	FindClose(hFind); //Always, Always, clean things up!
+
+	return true;
 }
