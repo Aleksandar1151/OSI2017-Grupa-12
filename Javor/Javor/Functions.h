@@ -11,5 +11,5 @@ int checkUser(string, string);
 int checkUser(string);
 void changeCurr();
 void deleteUser();
-void exportData();
+void exportData(int);
 bool ListDirectoryContents(const char* );

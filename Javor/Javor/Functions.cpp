@@ -105,10 +105,28 @@ label_1:;
 	}
 	else if (group == 2)
 	{
-		ListDirectoryContents("..\\Racuni\\");
+		/*ListDirectoryContents("..\\Racuni\\");
 		system("pause");
-		system("CLS");
-		login();
+		system("CLS");*/
+
+		do {
+			cout << "Na sistem je prijavljen: [" << username << "]\n";
+			cout << "Opcije analiticara:\n" << "	[ Pregled svih podataka za odredjenog kupca ]--------[ 1 ]" << 
+				endl << "	[ Pregled svih podataka za odredjeni proizvod ]------[ 2 ]" << endl << "	[ Pregled ukupne prodaje za odredjeni mjesec ]-------[ 3 ] " << endl << "	[ Odjava ]-------------------------------------------[ 4 ]" << endl << "	[ Izlaz ]--------------------------------------------[ 5 ] \n >";
+			cin >> option;
+			system("CLS");
+			if (option == 4)
+			{
+				cout << "Odjavljivanje korisnika " << username << "...\n";
+				system("pause");
+				system("CLS");
+				goto label_1;
+			}
+			else if (option == 1 || option == 2 || option == 3) exportData(option);
+			else if (option == 5) { cout << "Izlaz iz programa... \n"; }
+			else cout << "Greska, izaberite opcije od 1 do 5!\n";
+		} while (option != 5);
+
 	}
 	else cout << "\nNedefinisana greska!\n";
 }
@@ -228,7 +246,7 @@ void deleteUser()
 	{
 		istringstream iss(line);
 		string subs;
-		iss >> subs;
+		iss >> subs; 		
 
 		if (subs != deleteline)
 		{
@@ -236,27 +254,117 @@ void deleteUser()
 		}
 	}
 
+	cout << "Obrisano ime\n> " << deleteline << endl;
+
 	temp.close();
 	fin.close();
 	remove("sifre.txt");
 	rename("temp.txt", "sifre.txt");
 }
-void exportData()
+void exportData(int option)
 {
-	/*
-
-    string s = "Somewhere down the road";
-    istringstream iss(s);
-
-    do
-    {
-        string subs;
-        iss >> subs;
-        cout << "Substring: " << subs << endl;
-    } while (iss);
+	int noData = 0;
+	string keyword;
+	string line;
+	string array;
 
 	
-	cout << "\nIspis racuna...(funkcija nije zavrsena)\n\n";*/
+	ifstream fkuf;
+	fkuf.open("kuf.txt");
+	ofstream fout;
+
+	if (option == 1)
+	{
+		cout << "Naziv kupca\n> "; cin >> keyword;
+		fout.open("Pregled svih podataka za odredjenog kupca.txt");
+		getline(fkuf, line);
+		fout << line << endl << endl;
+	
+		while (getline(fkuf, line))
+		{
+			istringstream iss(line);
+			string subs;
+			iss >> subs;
+
+			if (subs == keyword)
+			{
+				fout << line << endl;
+				noData++;
+			}
+		}
+
+		if (!noData) cout << "U KUF-u ne postoji kupac: " << keyword <<"." <<endl ;
+		else cout << "Kreiran je ispis za kupca " << keyword << endl;
+	}
+	else if (option == 2)
+	{
+		cout << "Naziv proizvoda\n> ";
+		cin.ignore();
+		getline(cin, keyword);
+		
+		fout.open("Pregled svih podataka za odredjen proizvod.txt");
+		getline(fkuf, line);
+		fout << line << endl << endl;
+
+		while (getline(fkuf, line))
+		{
+			istringstream iss(line);
+			string subs;
+			string subs1;
+			string subs2;
+			iss >> subs1;
+			iss >> subs1;
+			iss >> subs2;
+
+			subs.append(subs1);
+			subs.append(" ");
+			subs.append(subs2);
+
+
+
+			if (subs == keyword)
+			{
+				fout << line << endl;
+				noData++;
+			}
+		}
+
+		if (!noData) cout << "U KUF-u ne postoji proizvod: " << keyword << "." << endl;
+		else cout << "Kreiran je ispis za proizvod " << keyword << endl;
+	}
+	else if (option == 3)
+	{
+		cout << "Mjesec\n> "; cin >> keyword;
+		fout.open("Pregled svih podataka za odredjeni mjesec.txt");
+		getline(fkuf, line);
+		fout << line << endl << endl;
+
+		while (getline(fkuf, line))
+		{
+			istringstream iss(line);
+			string subs;
+			iss >> subs;
+			iss >> subs;
+			iss >> subs;
+			iss >> subs;
+
+			array = subs.substr(3, 2);
+			if (array == keyword)
+			{
+				fout << line << endl;
+				noData++;
+			}
+		}
+
+		if (!noData) cout << "U KUF-u ne postoji racun za proizvod u " << keyword << ". mjesecu." << endl;
+		else cout << "Kreiran je ispis za " << keyword << " mjesec." << endl;
+	}
+
+	system("pause");
+	system("CLS");
+	
+	fkuf.close();
+	fout.close();
 }
 
 bool ListDirectoryContents(const char *sDir)
