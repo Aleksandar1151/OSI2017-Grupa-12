@@ -1,0 +1,3 @@
+Kupac			Proizvod	Datum		Kolièina		Cijena		Iznos bez PDV-a			PDV		Iznos sa PDV-om
+
+Kupac	Proizvod	Datum		Kolicina	Cijena	Iznos bez PDV-a	PDV	Iznos sa PDV-om

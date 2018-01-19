@@ -8,10 +8,7 @@ using namespace std;
 
 int main()
 {
-	
-	login();
-
-	
+	login();	
 	system("pause");
 	return 0;
 }

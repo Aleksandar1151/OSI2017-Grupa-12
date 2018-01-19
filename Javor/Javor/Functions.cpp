@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <filesystem>
+#include <ctype.h>
 using namespace std;
 
 void registration()
@@ -20,10 +21,23 @@ void registration()
 		cin >> username;
 		if (!checkUser(username))
 		{
-			do {
+			int flag = 1;
+			while (flag) {
+				flag = 0;
 				cout << "PIN:\n>";
 				cin >> password;
-			} while (password.length() != 4 && cout << "PIN mora imati 4 broja!\nUnesi novi ");
+				if (password.length() != 4) flag = 1;
+				else flag = 0;
+				if (!isdigit(password[0])) flag = 1;
+				else flag = 0;
+				if (!isdigit(password[1])) flag = 1;
+				else flag = 0;
+				if (!isdigit(password[2])) flag = 1;
+				else flag = 0;
+				if (!isdigit(password[3])) flag = 1;
+				if (flag) cout << "PIN mora imati 4 broja!\nUnesi novi ";
+				else flag = 0;
+			}
 			
 			do {
 				cout << "  Korisnicka grupa:\n" << "	Administrator---[ 1 ]" << endl << "	Analiticar------[ 2 ]\n>";
@@ -163,7 +177,6 @@ int checkUser(string username)
 	string name, line, str;
 	int n = (int)username.size();
 	int q,group;
-	
 	ifstream myfile;
 	myfile.open("sifre.txt");
 	if (myfile.is_open()) 
@@ -184,6 +197,7 @@ int checkUser(string username)
 		}
 		myfile.close();
 	}
+	
 	return 0;
 }
 
@@ -201,6 +215,11 @@ void changeCurr()
 	temp.open("temp.txt");
 	cout << "Nova valuta\n> ";
 	cin >> currency;
+
+	ofstream fileCurrency;
+	fileCurrency.open("Valuta.txt");
+	if (fileCurrency.is_open())
+		fileCurrency << currency << endl;
 
 
 	if (fin.is_open())
@@ -270,7 +289,7 @@ void exportData(int option)
 
 	
 	ifstream fkuf;
-	fkuf.open("kuf.txt");
+	fkuf.open("Kuf.txt");
 	ofstream fout;
 
 	if (option == 1)
@@ -299,7 +318,7 @@ void exportData(int option)
 	else if (option == 2)
 	{
 		cout << "Naziv proizvoda\n> ";
-		cin.ignore();
+		//cin.ignore();
 		getline(cin, keyword);
 		
 		fout.open("Pregled svih podataka za odredjen proizvod.txt");
@@ -347,13 +366,15 @@ void exportData(int option)
 			iss >> subs;
 			iss >> subs;
 			iss >> subs;
-
-			array = subs.substr(3, 2);
+			string temparray = subs;
+			array = temparray.substr(3, 2);
+			
 			if (array == keyword)
 			{
 				fout << line << endl;
 				noData++;
 			}
+			
 		}
 
 		if (!noData) cout << "U KUF-u ne postoji racun za proizvod u " << keyword << ". mjesecu." << endl;
@@ -367,14 +388,384 @@ void exportData(int option)
 	fout.close();
 }
 
-bool ListDirectoryContents(const char *sDir)
+
+
+void CheckFormat1(const char *sPath) //PROVJERA RACUNA SA FORMATOM 1
+{
+	string line, p, k, c, u, d;
+	double k1, c1, u1, q = 0;
+	double s[20] = { 0 };
+	int i = 0, n = 0, j, m, z;
+	string::size_type sz;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		for (int lineno = 1; getline(myfile, line) && lineno < 6; lineno++)
+			if (lineno == 6)
+				cout << line << endl;
+		while (getline(myfile, line))
+		{
+			if (line.compare(0, 39, "---------------------------------------") != 0)
+			{
+				n++;
+				p = line;
+				k = p.substr(11, 9);
+				c = p.substr(21, 8);
+				u = p.substr(30, 6);
+				k1 = stod(k, &sz);
+				c1 = stod(c, &sz);
+				u1 = stod(u, &sz);
+				s[i++] = u1;
+				if (k1*c1 != u1)
+				{
+					PrintError(sPath);
+					myfile.close();
+				}
+			}
+			else
+				myfile.close();
+		}
+		myfile.close();
+	}
+	for (int i = 0; i < 20; i++)
+		q = q + s[i];
+	j = All(q, n + 7, sPath);
+	z = pdv(q, n + 8, sPath);
+	m = Payment(q, q*0.17, n + 9, sPath);
+	if ((j == 1) && (z == 1) && (m == 1))
+	{
+		Print1(n, sPath);
+		AddProcessed(sPath);
+	}
+	else
+	{
+		PrintError(sPath);
+	}
+}
+int All(double a, int n, const char* sPath) //ISCITAVANJE UKUPNOG IZNOSA SA RACUNA
+{
+	string line, s;
+	double p;
+	string::size_type sz;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		for (int lineno = 1; getline(myfile, line) && lineno < n; lineno++)
+			if (lineno == n)
+				cout << line << endl;
+		if (getline(myfile, line))
+		{
+			s = line.substr(7, 4);
+			p = stod(s, &sz);
+			if (p == a)
+				return 1;
+			else
+				return 0;
+		}
+		return 0;
+		myfile.close();
+
+	}
+	return 0;
+	myfile.close();
+}
+int pdv(double a, int n, const char * sPath) //ISCITAVANJE PDV-A SA RACUNA
+{
+	string line, s;
+	double p, c;
+	string::size_type sz;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		for (int lineno = 1; getline(myfile, line) && lineno < n; lineno++)
+			if (lineno == n)
+				cout << line << endl;
+		if (getline(myfile, line))
+		{
+			s = line.substr(4, 6);
+			p = stod(s, &sz);
+			c = a * 0.17;
+			if (c == p)
+				return 1;
+			else
+				return 0;
+		}
+		return 0;
+		myfile.close();
+	}
+	return 0;
+	myfile.close();
+}
+int Payment(double a, double b, int n, const char * sPath) //ISCITAVANJE IZNOSA ZA PLACANJE
+{
+	string line, s;
+	double p, i;
+	string::size_type sz;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		for (int lineno = 1; getline(myfile, line) && lineno < n; lineno++)
+			if (lineno == n)
+				cout << line << endl;
+		if (getline(myfile, line))
+		{
+			s = line.substr(19, 7);
+			p = stod(s, &sz);
+			i = a + b;
+			if (p == i)
+				return 1;
+			else
+				return 0;
+		}
+		return 0;
+		myfile.close();
+	}
+	return 0;
+	myfile.close();
+}
+void PrintError(const char * sPath) //ISPISIVANJE POGRESNOG RACUNA U ZASEBAN TXT FAJL
+{
+	string line;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	ofstream file("Error.txt", ios::app);
+	if (myfile.is_open())
+	{
+		if (file.is_open())
+		{
+			while (getline(myfile, line))
+			{
+				file << line << endl;
+			}
+		}
+		file.close();
+	}
+	myfile.close();
+}
+void Print1(int m, const char * sPath)  //ISPIS PRVOG FORMATA U DATOTEKU KUF.TXT
+{
+
+	string line, kupac, datum, proizvod, kolicina, cijena, ukupno;
+	string d, d1;
+	double /*b, a, c,*/ pdv, u, k;
+	int  n = 1;
+	string::size_type sz;
+	ifstream myfile;
+	ifstream f("Valuta.txt");
+	myfile.open(sPath, ios::app);
+	ofstream file("Kuf.txt", ios::app);
+	if (f.is_open())
+	{
+		if (getline(f, d))
+			d1 = d.substr(0, 2);
+	}
+	f.close();
+	if (myfile.is_open())
+	{
+		if (file.is_open())
+		{
+			while (getline(myfile, line))
+			{
+				n++;
+				if (n == 2)
+				{
+					kupac = line.substr(7, 3);
+				}
+				if (n == 3)
+				{
+					datum = line.substr(7, 10);
+				}
+				if (n > 7 && n <= (7 + m))
+				{
+					if (line.compare(0, 39, "---------------------------------------") != 0)
+					{
+						proizvod = line.substr(0, 9);
+						kolicina = line.substr(11, 9);
+						cijena = line.substr(22, 7);
+						ukupno = line.substr(31, 7);
+						u = stod(ukupno, &sz);
+						pdv = u * 0.17;
+						k = pdv + u;
+						file << kupac + "			" << proizvod << "	" << datum << "	" << kolicina << "		" << cijena << "		" << ukupno << "				" << pdv << "		" << k << "	" << d1 << endl;
+					}
+				}
+			}
+		}
+	}
+	file.close();
+	myfile.close();
+}
+void CheckFormat4(const char* sPath) //PROVJERA RACUNA SA FORMATOM BROJ 4
+{
+	string line, p, k, c, u, d;
+	double k1, c1, u1, q = 0;
+	double s[20] = { 0 };
+	int i = 0, n = 0, j, m, z;
+	string::size_type sz;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		for (int lineno = 1; getline(myfile, line) && lineno < 7; lineno++)
+			if (lineno == 7)
+				cout << line << endl;
+		while (getline(myfile, line))
+		{
+			if (line.compare(0, 39, "---------------------------------------") != 0)
+			{
+				n++;
+				p = line;
+				k = p.substr(11, 9);
+				c = p.substr(21, 8);
+				u = p.substr(30, 6);
+				k1 = stod(k, &sz);
+				c1 = stod(c, &sz);
+				u1 = stod(u, &sz);
+				s[i++] = u1;
+				if (k1*c1 != u1)
+				{
+					PrintError(sPath);
+					myfile.close();
+				}
+			}
+			else
+				myfile.close();
+		}
+		myfile.close();
+	}
+	for (int i = 0; i < 20; i++)
+		q = q + s[i];
+	j = All(q, n + 8, sPath);
+	z = pdv(q, n + 9, sPath);
+	m = Payment(q, q*0.17, n + 11, sPath);
+	if ((j == 1) && (z == 1) && (m == 1))
+	{
+		Print2(n, sPath);
+		AddProcessed(sPath);
+	}
+	else
+	{
+		PrintError(sPath);
+	}
+
+}
+void Print2(int m, const char * sPath)  //ISPIS CETVRTOG FORMATA U DATOTEKU KUF.TXT
+{
+	string line, kupac, datum, proizvod, kolicina, cijena, ukupno;
+	string d, d1;
+	double /*b, a, c,*/ u, pdv, k;
+	int  n = 1;
+	string::size_type sz;
+	ifstream f("Valuta.txt");
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	ofstream file("Kuf.txt", ios::app);
+	if (f.is_open())
+	{
+		if (getline(f, d))
+			d1 = d.substr(0, 2);
+	}
+	f.close();
+	if (myfile.is_open())
+	{
+		if (file.is_open())
+		{
+			while (getline(myfile, line))
+			{
+				n++;
+				if (n == 2)
+				{
+					kupac = line.substr(7, 3);
+				}
+				if (n == 3)
+				{
+					datum = line.substr(7, 10);
+				}
+				if (n > 8 && n <= (8 + m))
+				{
+					if (line.compare(0, 39, "---------------------------------------") != 0)
+					{
+						proizvod = line.substr(0, 9);
+						kolicina = line.substr(11, 9);
+						cijena = line.substr(22, 7);
+						ukupno = line.substr(31, 7);
+						u = stod(ukupno, &sz);
+						pdv = u * 0.17;
+						k = pdv + u;
+						file << kupac + "			" << proizvod << "	" << datum << "	" << kolicina << "		" << cijena << "		" << ukupno << "				" << pdv << "		" << k << "	" << d1 << endl;
+					}
+				}
+			}
+		}
+	}
+	file.close();
+	myfile.close();
+}
+void AddProcessed(const char * sPath)  //DODAVANJE OBRADJENO. U SVAKI RACUN KOJI JE ISPRAVAN
+{
+	ofstream myfile;
+	myfile.open(sPath, ios::app);
+	if (myfile.is_open())
+	{
+		myfile << endl;
+		myfile << "OBRADJENO." << endl;
+	}
+	myfile.close();
+}
+int NumberOfLines(const char * sPath)  //PREBROJAVANJE LINIJA RACUNA
+{
+	int n = 1;
+	string line;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			n++;
+		}
+	}
+	myfile.close();
+	return n;
+}
+int BillProcessed(const char * sPath)  //PROVJERA DA LI JE RACUN VEC OBRADJEN
+{
+	string line;
+	int a;
+	int n = 1;
+	a = NumberOfLines(sPath);
+	string t;
+	ifstream myfile;
+	myfile.open(sPath, ios::in);
+	if (myfile.is_open())
+	{
+		while (getline(myfile, line))
+		{
+			n++;
+			if (n == a)
+			{
+				if (line.compare(0, 10, "OBRADJENO.") == 0)
+					return 0;
+				else
+					return 1;
+			}
+		}
+	}
+	return 0;
+	myfile.close();
+}
+bool ListDirectoryContents(const char *sDir)  //CITANJE SVIH TXT. FAJLOVA IZ JEDNE DATOTEKE
 {
 	WIN32_FIND_DATA fdFile;
 	HANDLE hFind = NULL;
 
+	int a;
 	char sPath[2048];
 
-	//Specify a file mask. *.* = We want everything!
 	sprintf_s(sPath, "%s\\*.*", sDir);
 
 	if ((hFind = FindFirstFile(sPath, &fdFile)) == INVALID_HANDLE_VALUE)
@@ -385,38 +776,56 @@ bool ListDirectoryContents(const char *sDir)
 
 	do
 	{
-		//Find first file will always return "."
-		//    and ".." as the first two directories.
-		if (strcmp(fdFile.cFileName, ".") != 0
-			&& strcmp(fdFile.cFileName, "..") != 0)
+		if (strcmp(fdFile.cFileName, ".") != 0 && strcmp(fdFile.cFileName, "..") != 0)
 		{
-			//Build up our file path using the passed in
-			//  [sDir] and the file/foldername we just found:
 			sprintf_s(sPath, "%s\\%s", sDir, fdFile.cFileName);
 
-			//Is the entity a File or Folder?
 			if (fdFile.dwFileAttributes &FILE_ATTRIBUTE_DIRECTORY)
 			{
 				printf("Directory: %s\n", sPath);
-				ListDirectoryContents(sPath); //Recursion, I love it!
+				ListDirectoryContents(sPath);
 			}
 			else {
-				//->printf("File: %s\n", sPath);
-				string line;
-				ifstream file;
-				file.open(sPath, ios::in);
 
-				while (getline(file, line))
+				a = BillProcessed(sPath);
+				if (a != 0)
 				{
-					cout << line << '\n';
+					string line;
+					string p;
+					ifstream file;
+					file.open(sPath, ios::in);
+					if (file.is_open())
+					{
+
+						for (int lineno = 1; getline(file, line) && lineno < 5; lineno++)
+							if (lineno == 4)
+								p = line;
+						file.close();
+					}
+					else cout << "Error.";
+					if (p.compare(8, 5, "Racun") == 0)
+						CheckFormat1(sPath);
+					else if (p.compare(7, 10, "OSI Market") == 0)
+					{
+						CheckFormat4(sPath);
+					}
+					else
+						cout << "Nepoznat format." << endl;
+
+					while (getline(file, line))
+					{
+
+
+						cout << line << '\n';
+					}
+					file.close();
 				}
-				file.close();
 
 			}
 		}
-	} while (FindNextFile(hFind, &fdFile)); //Find the next file.
+	} while (FindNextFile(hFind, &fdFile));
 
-	FindClose(hFind); //Always, Always, clean things up!
+	FindClose(hFind);
 
 	return true;
 }
