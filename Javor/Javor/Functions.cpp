@@ -105,7 +105,12 @@ label_1:;
 				system("CLS");
 			}
 			else if (option == 2) registration();
-			else if (option == 3) deleteUser();
+			else if (option == 3)
+			{
+				deleteUser();
+				system("pause");
+				system("CLS");
+			}
 			else if (option == 4) 
 			{	
 				cout << "Odjavljivanje korisnika " << username << "...\n"; 
@@ -119,9 +124,11 @@ label_1:;
 	}
 	else if (group == 2)
 	{
-		/*ListDirectoryContents("..\\Racuni\\");
+		ListDirectoryContents("..\\Racuni\\");
+		//("..\\Debug\\Racuni\\");
+		cout << "Racuni su obradjeni.\n";
 		system("pause");
-		system("CLS");*/
+		system("CLS");
 
 		do {
 			cout << "Na sistem je prijavljen: [" << username << "]\n";
@@ -210,7 +217,7 @@ void changeCurr() // Funkcija za promjenu valuta
 	
 
 	ifstream fin;
-	fin.open("kuf.txt");
+	fin.open("Kuf.txt");
 	ofstream temp;
 	temp.open("temp.txt");
 	cout << "Nova valuta\n> ";
@@ -239,10 +246,10 @@ void changeCurr() // Funkcija za promjenu valuta
 		}
 		temp.close();
 		fin.close();
-		remove("kuf.txt");
-		rename("temp.txt", "kuf.txt");
+		remove("Kuf.txt");
+		rename("temp.txt", "Kuf.txt");
 	}
-	else cout << "Greska prilikom otvaranja kuf.txt\n";
+	else cout << "Greska prilikom otvaranja Kuf.txt\n";
 	cout << "Valuta je promijenjena u " << currency<<endl<<endl;
 	
 }
@@ -273,7 +280,7 @@ void deleteUser() // Funkcija za brisanja korisnika
 		}
 	}
 
-	cout << "Obrisano ime\n> " << deleteline << endl;
+	cout << "Obrisano korisnik\n> " << deleteline << endl;
 
 	temp.close();
 	fin.close();
