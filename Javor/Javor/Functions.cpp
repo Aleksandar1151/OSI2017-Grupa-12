@@ -10,7 +10,7 @@
 #include <ctype.h>
 using namespace std;
 
-void registration()
+void registration() // Funkcija za registraciju novih korisnika
 {
 	string username, password;
 	int group;
@@ -60,7 +60,7 @@ void registration()
 		myfile.close();
 	}	
 }
-void login()
+void login() // Funkcija za prijavu korisnika
 {
 	goto label_1;
 
@@ -144,7 +144,7 @@ label_1:;
 	}
 	else cout << "\nNedefinisana greska!\n";
 }
-int checkUser(string username, string password)
+int checkUser(string username, string password) // Funkcija za provjeru korisnièkog imena i PIN-a
 {
 	string line1;
 	string line2;
@@ -172,7 +172,7 @@ int checkUser(string username, string password)
 	else cout << "Greska prilikom otvaranja sifre.txt\n";
 	return 0;
 }
-int checkUser(string username) 
+int checkUser(string username) // Funkcija za provjeru korisnièkog imena
 {
 	string name, line, str;
 	int n = (int)username.size();
@@ -201,7 +201,7 @@ int checkUser(string username)
 	return 0;
 }
 
-void changeCurr()
+void changeCurr() // Funkcija za promjenu valuta
 {	
 	string currency;
 	string header;
@@ -246,7 +246,7 @@ void changeCurr()
 	cout << "Valuta je promijenjena u " << currency<<endl<<endl;
 	
 }
-void deleteUser()
+void deleteUser() // Funkcija za brisanja korisnika
 {
 	string deleteline;
 	string line;
@@ -280,7 +280,7 @@ void deleteUser()
 	remove("sifre.txt");
 	rename("temp.txt", "sifre.txt");
 }
-void exportData(int option)
+void exportData(int option) // Funkcija za ispit podataka
 {
 	int noData = 0;
 	string keyword;
